@@ -66,6 +66,7 @@
         flex-wrap: wrap;
         gap: 20px;
         margin-top: 20px;
+        justify-content: center;
 
     }
     .film{
@@ -76,7 +77,8 @@
     }
     section{
         border: 1px solid black;
-        padding: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
         max-width: 1300px;
         margin: auto;
     }
@@ -87,12 +89,17 @@
     .title:hover{
         color: #666666;
           }
+          .forms{
+            display: flex;
+            justify-content: space-around;
+  
+          }
 </style>
 
 <body>
     <h1>Список фильмов</h1>
     <section>
-    <div>
+    <div class="forms">
         <form action="{% url 'random_movie' %}" method="GET">
             <button class="rand" type="submit">Случайный фильм</button>
         </form>

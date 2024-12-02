@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Вход
+{% endblock %}
+
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+  h2{
+    font-family: 'Oswald';
+  }
+    a:hover{
+   color: #666666;
+  }
+  .log{
+    margin-left: 60px;
+  }
+</style>
+<div class="log">
+<h2>Вход</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="username">Имя пользователя:</label>
+    <input type="text" name="username" required>
+    
+    <label for="password">Пароль:</label>
+    <input type="password" name="password" required>
+    
+    <button type="submit">Войти</button>
+</form>
+<p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+{% if messages %}
+    {% for message in messages %}
+        <div>{{ message }}</div>
+    {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

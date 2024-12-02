@@ -1,0 +1,132 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+{{ movie.title }}
+{% endblock %}
+
+{% block content %}
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+    *{
+        font-family: 'Lato';
+    }
+    .detail {
+        margin-top: 50px;
+        border-top: 1px solid rgb(145, 145, 145);
+        padding-top: 50px;
+        margin-left: 60px;
+    }
+    .desc {
+        width: 500px;
+        font-family: 'Lato';
+        margin: 0;
+        padding: 0;
+    }
+    .card {
+        display: flex;
+        gap: 35px;
+    }
+    .title{
+        font-family: 'Oswald';
+        font-weight: 500;
+        font-size: 42px;
+    }
+    .card_text{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+    }
+    p{
+        font-family: 'Lato';
+    }
+    .nav{
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+    }
+    a{
+        font-size: 20px;
+        font-weight: 500;
+        
+
+    }
+    a:hover{
+        color: #666666;
+     }
+     h3{
+        font-family: 'Oswald';
+        font-size: 18px;
+     }
+     b{
+        font-family: 'Oswald';
+     }
+
+
+</style>
+<div class="detail">
+    <div class="card">
+        <div>
+            {% if movie.cover %}
+            <img src="{{ movie.cover.url }}" width="400px" height="500px" alt="{{ movie.title }}">
+            {% else %}
+            <img src="{% static 'movies/img/IconArtwork.jpg' %}" alt="Нет обложки">
+            {% endif %}
+        </div>
+
+        <div class="card_text">
+            <h1 style="margin: 0; padding: 0;" class="title">{{ movie.title }}</h1>
+            <p class="desc"><b>Описание:</b>  {{ movie.description }}</p>
+            <p style="margin: 0; padding: 0; font-size: 18px;"><b>Жанр:</b> {{ movie.genre }}</p>
+            <p style="margin: 0; padding: 0;"><b>Год выпуска:</b> {{ movie.release_year }}</p>
+        </div>
+    </div>
+
+    {% if movie.video %}
+    <video controls width="800px" height="500px">
+        <source src="{{ movie.video.url }}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
+    {% endif %}
+
+    {% if movie.ratings.exists %}
+    <h3>Рейтинг:</h3>
+    <p style="color: orange; font-weight: 600; font-size: 20px;">{{ average_rating }}</p>
+    {% else %}
+    <p>Пока нет оценок для этого фильма.</p>
+    {% endif %}
+
+    {% if user.is_authenticated and not user.is_staff %}
+    {% if user_rating %}
+    <h2 style="font-family: 'Oswald';">Измените свою оценку</h2>
+    <form method="post" action="{% url 'rate_movie' movie.pk %}">
+        {% csrf_token %}
+        <label for="id_score">Оценка:</label>
+        <input type="number" name="score" value="{{ user_rating.score }}" min="0" max="10" step="1" required>
+        <button type="submit">Изменить оценку</button>
+    </form>
+    {% else %}
+    <h2 style="font-family: 'Oswald';">Оцените фильм</h2>
+    <form method="post" action="{% url 'rate_movie' movie.pk %}">
+        {% csrf_token %}
+        <label for="id_score">Оценка:</label>
+        {{ rating_form.as_p }}
+        <button type="submit">Оценить</button>
+    </form>
+    {% endif %}
+    {% endif %}
+
+        <div class="nav">
+    {% if user.is_staff %}
+    <a href="{% url 'update' movie.id %}">Редактировать</a>
+    <a href="{% url 'delete' movie.id %}">Удалить</a>
+    {% endif %}
+    <a href="{% url 'index' %}">Назад</a>
+</div>
+</div>
+{% endblock %}
